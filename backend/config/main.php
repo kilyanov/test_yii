@@ -1,4 +1,7 @@
 <?php
+
+use yii\rbac\DbManager;
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -7,11 +10,29 @@ $params = array_merge(
 );
 
 return [
-    'id' => 'app-backend',
+    'name' => 'TEST-YII',
+    'language' => 'ru-RU',
+    'id' => 'TEST-YII',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
+    'modules' => [
+        'gridview' =>  [
+            'class' => '\kartik\grid\Module',
+        ],
+        'user' => [
+            'class' => 'backend\modules\user\Module',
+        ],
+        'products' => [
+            'class' => 'backend\modules\products\Module',
+        ],
+        'clients' => [
+            'class' => 'backend\modules\clients\Module',
+        ],
+        'orders' => [
+            'class' => 'backend\modules\orders\Module',
+        ],
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
@@ -37,14 +58,19 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'products/default/update/<id:[\w\-]+>' => 'products/default/update',
+                'products/default/delete/<id:[\w\-]+>' => 'products/default/delete',
+                'clients/default/update/<id:[\w\-]+>' => 'clients/default/update',
+                'clients/default/delete/<id:[\w\-]+>' => 'clients/default/delete',
             ],
         ],
-        */
+        'authManager' => [
+            'class' => DbManager::class,
+        ],
     ],
     'params' => $params,
 ];

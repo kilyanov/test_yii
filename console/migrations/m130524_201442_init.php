@@ -1,33 +1,39 @@
 <?php
 
-use yii\db\Migration;
+use common\base\Model;
+use console\migrations\common\BaseMigration;
 
-class m130524_201442_init extends Migration
+class m130524_201442_init extends BaseMigration
 {
+    public const TABLE_NAME = 'user';
+
+    private string $table = '{{%' . self::TABLE_NAME . '}}';
+
+    /**
+     * @throws \yii\db\Exception
+     */
     public function up()
     {
         $tableOptions = null;
-        if ($this->db->driverName === 'mysql') {
-            // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
-        }
-
-        $this->createTable('{{%user}}', [
-            'id' => $this->primaryKey(),
-            'username' => $this->string()->notNull()->unique(),
-            'auth_key' => $this->string(32)->notNull(),
-            'password_hash' => $this->string()->notNull(),
-            'password_reset_token' => $this->string()->unique(),
-            'email' => $this->string()->notNull()->unique(),
-
-            'status' => $this->smallInteger()->notNull()->defaultValue(10),
-            'created_at' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
+        $this->setExtension();
+        $this->createTable($this->table, [
+            'id' => $this->generalId(),
+            'username' => $this->string()->notNull()->unique()->comment('Логин'),
+            'auth_key' => $this->string(32)->notNull()->comment('Ключ'),
+            'password_hash' => $this->string()->notNull()->comment('Пароль'),
+            'password_reset_token' => $this->string()->unique()->defaultValue(null)->comment('Токен для сброса пароля'),
+            'email' => $this->string()->notNull()->unique()->comment('Email'),
+            'verification_token' => $this->string()->null()->defaultValue(null)->comment('Токен регистрации'),
+            'status' => $this->smallInteger()->notNull()->defaultValue(Model::ACTIVE),
+            'createdAt' => $this->dateTime()->notNull(),
+            'updatedAt' => $this->dateTime()->notNull(),
+            'deletedAt' => $this->dateTime()->null(),
         ], $tableOptions);
+        $this->setPrimary(self::TABLE_NAME);
     }
 
     public function down()
     {
-        $this->dropTable('{{%user}}');
+        $this->dropTable($this->table);
     }
 }

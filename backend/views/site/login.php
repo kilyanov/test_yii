@@ -1,32 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
+use common\models\LoginForm;
+use yii\bootstrap4\Html;
+use yii\bootstrap4\ActiveForm;
+
 /** @var yii\web\View $this */
-/** @var yii\bootstrap5\ActiveForm $form */
-/** @var \common\models\LoginForm $model */
+/** @var ActiveForm $form */
+/** @var LoginForm  $model */
 
-use yii\bootstrap5\ActiveForm;
-use yii\bootstrap5\Html;
-
-$this->title = 'Login';
+$this->title = 'Вход в систему';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <div class="mt-5 offset-lg-3 col-lg-6">
+<div class="card">
+    <div class="card-body login-card-body">
         <h1><?= Html::encode($this->title) ?></h1>
 
-        <p>Please fill out the following fields to login:</p>
 
-        <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
-
-            <?= $form->field($model, 'password')->passwordInput() ?>
-
-            <?= $form->field($model, 'rememberMe')->checkbox() ?>
-
-            <div class="form-group">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-primary btn-block', 'name' => 'login-button']) ?>
-            </div>
+        <?php $form = ActiveForm::begin(); ?>
+        <?= $form->field($model, 'username') ?>
+        <?= $form->field($model, 'password')->passwordInput() ?>
+        <?= $form->field($model, 'rememberMe')->checkbox() ?>
+        <div class="row">
+            <?= Html::submitButton('Войти', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+        </div>
 
         <?php ActiveForm::end(); ?>
+
     </div>
 </div>
